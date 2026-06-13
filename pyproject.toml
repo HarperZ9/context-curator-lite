@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "context-curator-lite"
+version = "0.1.0"
+description = "Extract planning fragments and heuristic redactions into compact local context bundles."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Zain Dana Harper" }]
+keywords = ["context", "curator", "privacy", "cli", "tooling"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+context-curator-lite = "context_curator_lite.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/HarperZ9/context-curator-lite"
+Repository = "https://github.com/HarperZ9/context-curator-lite"
+Issues = "https://github.com/HarperZ9/context-curator-lite/issues"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["src"]
+testpaths = ["tests"]

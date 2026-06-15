@@ -6,6 +6,8 @@ for session continuity.
 
 The utility is lightweight by design. It helps a human prepare bounded context;
 it is not a security boundary or a replacement for review before sharing.
+Generated bundles use relative source references and root hashes instead of
+absolute local paths.
 
 ## Install
 
@@ -25,6 +27,7 @@ context-curator-lite --root . --out-dir ./artifacts --limit 120 --per-file-limit
 - It is an agent-assisted tool and should be used with human review of the
   generated context.
 - Redaction is heuristic and not a security boundary.
+- Absolute root paths are omitted from generated bundles by default.
 
 ## Release Notes
 

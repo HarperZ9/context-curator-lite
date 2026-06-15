@@ -72,6 +72,26 @@ MAX_FILE_BYTES = 25 * 1024 * 1024
 MAX_FRAGMENT = 420
 
 
+def stable_id(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()[:16]
+
+
+def source_ref(path: Path, roots: list[Path]) -> str:
+    try:
+        resolved_path = path.resolve()
+    except OSError:
+        resolved_path = path
+    for root in roots:
+        try:
+            resolved_root = root.resolve()
+            rel = resolved_path.relative_to(resolved_root)
+        except (OSError, ValueError):
+            continue
+        rel_text = rel.as_posix()
+        return path.name if rel_text in ("", ".") else rel_text
+    return path.name
+
+
 def iter_strings(value: object) -> Iterable[str]:
     if isinstance(value, str):
         yield value
@@ -209,11 +229,12 @@ def main(
             if digest in seen:
                 continue
             seen.add(digest)
+            source = source_ref(path, roots)
             records.append(
                 {
                     "kind": classify(text),
-                    "source": str(path),
-                    "source_sha256_prefix": hashlib.sha256(str(path).encode("utf-8")).hexdigest()[:16],
+                    "source": source,
+                    "source_sha256_prefix": stable_id(source),
                     "text": text,
                 }
             )
@@ -225,9 +246,11 @@ def main(
         if len(records) >= limit:
             break
 
-    timestamp = datetime.now().isoformat(timespec="seconds")
-    jsonl_path = out_dir / "curated-session-context-2026-06-10.jsonl"
-    md_path = out_dir / "CURATED-SESSION-CONTEXT-2026-06-10.md"
+    now = datetime.now()
+    timestamp = now.isoformat(timespec="seconds")
+    date_stamp = now.date().isoformat()
+    jsonl_path = out_dir / f"curated-session-context-{date_stamp}.jsonl"
+    md_path = out_dir / f"CURATED-SESSION-CONTEXT-{date_stamp}.md"
     manifest_path = out_dir / "curated-session-context-manifest.json"
 
     with jsonl_path.open("w", encoding="utf-8", newline="\n") as handle:
@@ -253,8 +276,10 @@ def main(
 
     manifest = {
         "generated": timestamp,
-        "roots": [str(root) for root in roots],
-        "outputs": [str(md_path), str(jsonl_path), str(manifest_path)],
+        "root_count": len(roots),
+        "root_sha256_prefixes": [stable_id(str(root.resolve())) for root in roots],
+        "outputs": [md_path.name, jsonl_path.name, manifest_path.name],
+        "absolute_paths_included": False,
         "raw_transcripts_copied": False,
         "source_files_scanned": scanned,
         "raw_keyword_matches": matched,

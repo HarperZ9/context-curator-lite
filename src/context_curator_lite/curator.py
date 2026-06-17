@@ -1,8 +1,8 @@
 """Curate sanitized planning context from local assistant sessions.
 
 This tool does not copy raw transcripts. It extracts short planning-like
-fragments, redacts secret-shaped values, and normalizes posture-heavy wording
-into neutral workspace language before writing local protected artifacts.
+fragments, redacts secret-shaped values, and scrubs direct identifiers
+(emails, IPs, URLs, hashes) before writing local artifacts.
 """
 
 from __future__ import annotations
@@ -22,8 +22,7 @@ KEYWORDS = re.compile(
     r"todo|next|plan|roadmap|blocker|blocked|handoff|resume|continue|"
     r"migrat|integrat|curat|commit|push|branch|repo|worktree|dirty|"
     r"architecture|design|invariant|whitepaper|research|idea|context|"
-    r"apps|quanta|universe|skse|wow|aurora|warden|agents|protected|"
-    r"codex|claude|session|scope|manifest|ledger"
+    r"session|scope|manifest|ledger"
     r")\b",
     re.IGNORECASE,
 )
@@ -36,28 +35,6 @@ SECRET_PATTERNS = [
     re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
     re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
     re.compile(r"(?i)\b(bearer|token|api[_-]?key|password|secret)\s*[:=]\s*\S+"),
-]
-
-POSTURE_REPLACEMENTS = [
-    (re.compile(r"(?i)\bomni[- ]?weapon\b"), "omni-state utility"),
-    (re.compile(r"(?i)\bweaponized?\b"), "utility-oriented"),
-    (re.compile(r"(?i)\boffensive[- ]?postured?\b"), "sensitive-posture"),
-    (re.compile(r"(?i)\boffensive\b"), "sensitive"),
-    (re.compile(r"(?i)\battack(?:ing|ed|s)?\b"), "exercise"),
-    (re.compile(r"(?i)\bexploit(?:ing|ed|s)?\b"), "validate"),
-    (re.compile(r"(?i)\bexfiltrat(?:e|ed|es|ing|ion)\b"), "controlled transfer"),
-    (re.compile(r"(?i)\bbypass(?:ed|es|ing)?\b"), "alternate path"),
-    (re.compile(r"(?i)\bpayload(?:s)?\b"), "artifact"),
-    (re.compile(r"(?i)\btarget(?:s|ed|ing)?\b"), "surface"),
-    (re.compile(r"(?i)\bvictim(?:s)?\b"), "affected party"),
-    (re.compile(r"(?i)\bcredential(?:s)?\b"), "access material"),
-    (re.compile(r"(?i)\bmalware\b"), "unknown binary"),
-    (re.compile(r"(?i)\brootkit\b"), "privileged component"),
-    (re.compile(r"(?i)\bsteal(?:ing|s)?\b"), "extract"),
-    (re.compile(r"(?i)\bkill chain\b"), "workflow chain"),
-    (re.compile(r"(?i)\brecon(?:naissance)?\b"), "survey"),
-    (re.compile(r"(?i)\brecon(?=\.{2,})"), "survey"),
-    (re.compile(r"(?i)\bcovert\b"), "non-public"),
 ]
 
 IDENTIFIER_PATTERNS = [
@@ -108,8 +85,6 @@ def scrub(text: str) -> str:
     for pattern in SECRET_PATTERNS:
         text = pattern.sub("<redacted-secret>", text)
     for pattern, replacement in IDENTIFIER_PATTERNS:
-        text = pattern.sub(replacement, text)
-    for pattern, replacement in POSTURE_REPLACEMENTS:
         text = pattern.sub(replacement, text)
     text = re.sub(r"\s+", " ", text).strip()
     if len(text) > MAX_FRAGMENT:

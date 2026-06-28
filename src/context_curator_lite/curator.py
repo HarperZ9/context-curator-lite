@@ -16,6 +16,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
+from .telos_envelope import build_context_envelope
+
 
 KEYWORDS = re.compile(
     r"\b("
@@ -170,6 +172,7 @@ def main(
     out_dir: str | Path | None = None,
     limit: int = 2500,
     per_file_limit: int = 12,
+    telos_envelope: bool = False,
 ) -> int:
     if roots is None or out_dir is None:
         parser = argparse.ArgumentParser()
@@ -177,11 +180,13 @@ def main(
         parser.add_argument("--out-dir", required=True)
         parser.add_argument("--limit", type=int, default=2500)
         parser.add_argument("--per-file-limit", type=int, default=12)
+        parser.add_argument("--telos-envelope", action="store_true")
         args = parser.parse_args()
         roots = args.root
         out_dir = args.out_dir
         limit = args.limit
         per_file_limit = args.per_file_limit
+        telos_envelope = args.telos_envelope
 
     roots = [Path(item) for item in roots]
     out_dir = Path(out_dir)
@@ -227,6 +232,7 @@ def main(
     jsonl_path = out_dir / f"curated-session-context-{date_stamp}.jsonl"
     md_path = out_dir / f"CURATED-SESSION-CONTEXT-{date_stamp}.md"
     manifest_path = out_dir / "curated-session-context-manifest.json"
+    envelope_path = out_dir / "project-telos-context-envelope.json"
 
     with jsonl_path.open("w", encoding="utf-8", newline="\n") as handle:
         for record in records:
@@ -249,11 +255,15 @@ def main(
             handle.write(f"- Source hash: `{record['source_sha256_prefix']}`\n")
             handle.write(f"- Text: {record['text']}\n\n")
 
+    outputs = [md_path.name, jsonl_path.name, manifest_path.name]
+    if telos_envelope:
+        outputs.append(envelope_path.name)
+
     manifest = {
         "generated": timestamp,
         "root_count": len(roots),
         "root_sha256_prefixes": [stable_id(str(root.resolve())) for root in roots],
-        "outputs": [md_path.name, jsonl_path.name, manifest_path.name],
+        "outputs": outputs,
         "absolute_paths_included": False,
         "raw_transcripts_copied": False,
         "source_files_scanned": scanned,
@@ -261,6 +271,12 @@ def main(
         "curated_records": len(records),
         "counts": dict(counts),
     }
+    if telos_envelope:
+        envelope = build_context_envelope(records, roots, manifest)
+        envelope_path.write_text(
+            json.dumps(envelope, indent=2, ensure_ascii=True),
+            encoding="utf-8",
+        )
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=True), encoding="utf-8")
     print(json.dumps(manifest, indent=2, ensure_ascii=True))
     return 0

@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "context-curator-lite"
-version = "0.1.0"
+version = "0.2.0"
 description = "Extract planning fragments and apply heuristic redaction to trim model context."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Zain Dana Harper" }]
-keywords = ["context", "curator", "privacy", "cli", "tooling"]
+keywords = ["context", "curator", "privacy", "cli", "tooling", "telos", "provenance"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",

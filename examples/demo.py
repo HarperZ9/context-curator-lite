@@ -26,7 +26,7 @@ SAMPLE_NOTES = """\
 todo: next action is to finish the migration and push the branch
 blocker: the integration test failed on the worktree
 architecture: design invariant for the curator whitepaper
-contact me at jane.doe@example.com or token=ghp_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+contact me at jane.doe@example.com or token=demo-secret-value
 just a plain chatter line with nothing useful to extract here
 """
 
@@ -61,6 +61,7 @@ def main() -> int:
             out_dir=str(out_dir),
             limit=50,
             per_file_limit=5,
+            telos_envelope=True,
         )
         print("exit code:", exit_code)
 

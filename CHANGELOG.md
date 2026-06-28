@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Adds optional Project Telos context-envelope export with source refs,
+  content hashes, expansion commands, and explicit privacy gates.
+- Exposes `--telos-envelope` in the CLI and `telos_envelope=True` in the
+  Python API for receipt-chained large-context workflows.
 - Omits absolute local root paths from generated bundles by default.
 - Uses relative source references plus root/source hash prefixes.
 - Uses the current run date in context output filenames.

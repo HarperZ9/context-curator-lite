@@ -30,7 +30,7 @@ as a module: `python -m context_curator_lite`.
 ```
 context-curator-lite --root ROOT [--root ROOT ...] --out-dir OUT_DIR
                      [--limit LIMIT] [--per-file-limit PER_FILE_LIMIT]
-                     [--version]
+                     [--telos-envelope] [--version]
 ```
 
 | Flag                | Type | Default | Meaning                                                        |
@@ -39,6 +39,7 @@ context-curator-lite --root ROOT [--root ROOT ...] --out-dir OUT_DIR
 | `--out-dir`         | path | (req.)  | Directory to write the bundle into (created if missing).       |
 | `--limit`           | int  | `2500`  | Max total curated records across all files.                    |
 | `--per-file-limit`  | int  | `12`    | Max curated records taken from any single file.                |
+| `--telos-envelope`  | flag | -       | Also write `project-telos-context-envelope.json`.              |
 | `--version`         | flag | -       | Print the version and exit.                                    |
 
 On success the command writes three files into `--out-dir` and prints the
@@ -55,6 +56,9 @@ Output files (the `<date>` is the run date, e.g. `2026-06-18`):
 ```bash
 context-curator-lite --root . --out-dir ./artifacts
 ```
+
+Pass `--telos-envelope` to also write
+`project-telos-context-envelope.json`.
 
 Expected stdout (illustrative):
 
@@ -100,6 +104,46 @@ context-curator-lite \
 The manifest's `root_count` becomes `2` and `root_sha256_prefixes` lists one
 hash prefix per root.
 
+### Telos context envelope export
+
+```bash
+context-curator-lite --root ./notes --out-dir ./artifacts --telos-envelope
+```
+
+The extra envelope uses the `project-telos.context-envelope/v1` shape. It is
+compact for model input but lossless by reference: source refs carry relative
+paths, full-file content hashes, and `gather docs ... --json` expansion
+commands. It does not include absolute paths, raw transcripts, raw secret
+values, or hidden payloads.
+
+Illustrative excerpt:
+
+```json
+{
+  "schema": "project-telos.context-envelope/v1",
+  "compression": {
+    "strategy": "heuristic_keyword_extract_with_hash_refs",
+    "lossless_by_ref": true,
+    "hidden_payloads_used": false
+  },
+  "source_refs": [
+    {
+      "id": "src_001",
+      "path": "notes.md",
+      "range": "full-file",
+      "content_hash": "sha256:..."
+    }
+  ],
+  "quality_gates": {
+    "readability": "MATCH",
+    "test_evidence": "UNVERIFIABLE",
+    "freshness": "MATCH",
+    "privacy": "MATCH"
+  },
+  "failure_code": null
+}
+```
+
 ### Example 3 — inspect the JSONL bundle
 
 ```bash
@@ -134,12 +178,15 @@ exit_code = curator.main(
     out_dir="./artifacts",
     limit=120,
     per_file_limit=8,
+    telos_envelope=True,
 )
 assert exit_code == 0
 ```
 
-`curator.main(roots, out_dir, limit=2500, per_file_limit=12)` writes the same
-three files described above, prints the manifest to stdout, and returns `0`.
+`curator.main(roots, out_dir, limit=2500, per_file_limit=12, telos_envelope=False)`
+writes the same base files described above, prints the manifest to stdout, and
+returns `0`. Set `telos_envelope=True` to add
+`project-telos-context-envelope.json`.
 
 ### Example 4 — use the redaction / classification helpers directly
 

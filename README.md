@@ -1,5 +1,41 @@
 # Context Curator Lite
 
+![Context Curator Lite hero](docs/brand/context-curator-lite-hero.png)
+
+> Build token-efficient context bundles with redaction, source refs, hashes, and Telos envelopes.
+
+Context Curator Lite extracts planning fragments from local text files, applies
+heuristic redaction, and emits compact context bundles for agent session
+continuity. It can also emit Project Telos context envelopes for receipt-chained
+large-workspace handoffs.
+
+## Why it matters
+
+Large codebases cannot be pushed into a model as raw text forever. This tool
+keeps context small, reviewable, and replayable by preserving source references,
+content hashes, and expansion commands instead of only compressed prose.
+
+## Try it
+
+```bash
+python -m pip install -e ".[test]"
+context-curator-lite --root . --out-dir ./artifacts --telos-envelope
+python -m pytest
+```
+
+## What to test first
+
+- Run a local context bundle over a small repo.
+- Inspect `curated-session-context-manifest.json`.
+- Generate `project-telos-context-envelope.json` with `--telos-envelope`.
+
+## Current status
+
+Python package and CLI for local context preparation. Redaction is heuristic and
+the generated bundle still requires human review before sharing.
+
+## Existing technical notes
+
 > Extract planning fragments and apply heuristic redaction to trim model context.
 
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

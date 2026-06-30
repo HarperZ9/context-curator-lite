@@ -47,11 +47,11 @@ manifest JSON to stdout. Exit code is `0`.
 
 Output files (the `<date>` is the run date, e.g. `2026-06-18`):
 
-- `CURATED-SESSION-CONTEXT-<date>.md` — human-readable summary + items.
-- `curated-session-context-<date>.jsonl` — one JSON record per curated fragment.
-- `curated-session-context-manifest.json` — run manifest (also printed to stdout).
+- `CURATED-SESSION-CONTEXT-<date>.md` -- human-readable summary + items.
+- `curated-session-context-<date>.jsonl` -- one JSON record per curated fragment.
+- `curated-session-context-manifest.json` -- run manifest (also printed to stdout).
 
-### Example 1 — scan the current directory
+### Example 1 -- scan the current directory
 
 ```bash
 context-curator-lite --root . --out-dir ./artifacts
@@ -87,7 +87,7 @@ Expected stdout (illustrative):
 }
 ```
 
-### Example 2 — tighter caps and multiple roots
+### Example 2 -- tighter caps and multiple roots
 
 `--root` uses append semantics, so pass it more than once to scan several
 locations in one run:
@@ -144,7 +144,7 @@ Illustrative excerpt:
 }
 ```
 
-### Example 3 — inspect the JSONL bundle
+### Example 3 -- inspect the JSONL bundle
 
 ```bash
 context-curator-lite --root ./notes --out-dir ./artifacts
@@ -166,7 +166,7 @@ bare filename); absolute paths are never emitted.
 ## Python API
 
 Import the `curator` submodule and call its functions. (Import the submodule
-explicitly — `from context_curator_lite import curator` — rather than relying
+explicitly -- `from context_curator_lite import curator` -- rather than relying
 on a top-level `main` re-export.)
 
 ```python
@@ -188,7 +188,7 @@ writes the same base files described above, prints the manifest to stdout, and
 returns `0`. Set `telos_envelope=True` to add
 `project-telos-context-envelope.json`.
 
-### Example 4 — use the redaction / classification helpers directly
+### Example 4 -- use the redaction / classification helpers directly
 
 ```python
 from context_curator_lite import curator

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Refreshes public/developer delivery with repo-local agent instructions,
+  current GitHub Actions majors, and ASCII-safe public documentation.
 - Adds optional Project Telos context-envelope export with source refs,
   content hashes, expansion commands, and explicit privacy gates.
 - Exposes `--telos-envelope` in the CLI and `telos_envelope=True` in the

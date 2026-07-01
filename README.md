@@ -62,7 +62,7 @@ absolute local paths.
 ## Install
 
 ```bash
-python -m pip install context-curator-lite
+python -m pip install -e ".[test]"
 ```
 
 ## Usage

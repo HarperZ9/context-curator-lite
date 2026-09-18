@@ -16,15 +16,37 @@ Python module.
 
 ## Install
 
-`context-curator-lite` is not published on PyPI. Install the current 0.2.0 source tree from a checkout:
+`context-curator-lite` is not published on PyPI. The published v0.2.0 package is available from GitHub Releases. Install the wheel only after checking the release asset hash:
+
+```bash
+(
+  set -eu
+  wheel="context_curator_lite-0.2.0-py3-none-any.whl"
+  curl -fL -o "$wheel" \
+    https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
+  python - "$wheel" <<'PY'
+from pathlib import Path
+import hashlib
+import sys
+expected = "e0323946afe9a075c4916759c70280987e57813d5fc6126cfdcbbfdeb6cf1556"
+actual = hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest()
+if actual != expected:
+    raise SystemExit(f"wheel sha256 mismatch: {actual}")
+PY
+  python -m pip install "./$wheel"
+)
+```
+
+The v0.2.0 sdist hash is `50bd0fa1fbb7efd34880c9538650b40647aab3f9ceb622aae8dec0b45f5c8958`. Requires Python 3.10+. The package has no runtime dependencies. If `pip install context-curator-lite` reports that no distribution was found, that is the current registry state rather than a local environment problem.
+
+For source development, clone the repository and install it editable:
 
 ```bash
 git clone https://github.com/HarperZ9/context-curator-lite.git
 cd context-curator-lite
 python -m pip install -e ".[test]"
+python -m pytest
 ```
-
-Requires Python 3.10+. The package has no runtime dependencies. If `pip install context-curator-lite` reports that no distribution was found, that is the current registry state rather than a local environment problem.
 
 ## Quickstart
 

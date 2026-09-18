@@ -20,9 +20,23 @@ content hashes, and expansion commands instead of only compressed prose.
 ## Try it
 
 ```bash
-python -m pip install -e ".[test]"
+(
+  set -eu
+  wheel="context_curator_lite-0.2.0-py3-none-any.whl"
+  curl -fL -o "$wheel" \
+    https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
+  python - "$wheel" <<'PY'
+from pathlib import Path
+import hashlib
+import sys
+expected = "e0323946afe9a075c4916759c70280987e57813d5fc6126cfdcbbfdeb6cf1556"
+actual = hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest()
+if actual != expected:
+    raise SystemExit(f"wheel sha256 mismatch: {actual}")
+PY
+  python -m pip install "./$wheel"
+)
 context-curator-lite --root . --out-dir ./artifacts --telos-envelope
-python -m pytest
 ```
 
 ## What to test first
@@ -63,15 +77,40 @@ absolute local paths.
 
 ## Install
 
-`context-curator-lite` is not published on PyPI. The current source tree is version 0.2.0; install it from a checkout:
+`context-curator-lite` is not published on PyPI. Install the published v0.2.0 wheel from GitHub Releases after checking the asset hash:
+
+```bash
+(
+  set -eu
+  wheel="context_curator_lite-0.2.0-py3-none-any.whl"
+  curl -fL -o "$wheel" \
+    https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
+  python - "$wheel" <<'PY'
+from pathlib import Path
+import hashlib
+import sys
+expected = "e0323946afe9a075c4916759c70280987e57813d5fc6126cfdcbbfdeb6cf1556"
+actual = hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest()
+if actual != expected:
+    raise SystemExit(f"wheel sha256 mismatch: {actual}")
+PY
+  python -m pip install "./$wheel"
+)
+```
+
+Release asset checks for v0.2.0:
+
+- wheel: `e0323946afe9a075c4916759c70280987e57813d5fc6126cfdcbbfdeb6cf1556`
+- sdist: `50bd0fa1fbb7efd34880c9538650b40647aab3f9ceb622aae8dec0b45f5c8958`
+
+For source development, clone the repository and install it editable:
 
 ```bash
 git clone https://github.com/HarperZ9/context-curator-lite.git
 cd context-curator-lite
 python -m pip install -e ".[test]"
+python -m pytest
 ```
-
-The GitHub v0.1.0 release assets exist for the older CLI, but they do not include the 0.2.0 Project Telos envelope work documented here.
 
 ## Usage
 

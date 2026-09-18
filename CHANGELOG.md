@@ -4,7 +4,7 @@
 
 No changes yet.
 
-## 0.2.0 - Pending release
+## 0.2.0 - 2026-09-18
 
 - Refreshes public/developer delivery with repo-local agent instructions,
   current GitHub Actions majors, and ASCII-safe public documentation.

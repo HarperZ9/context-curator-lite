@@ -16,11 +16,25 @@ Python module.
 
 ## Install
 
+`context-curator-lite` is not published on PyPI. Install the current 0.2.0 source tree from a checkout:
+
 ```bash
-python -m pip install context-curator-lite
+git clone https://github.com/HarperZ9/context-curator-lite.git
+cd context-curator-lite
+python -m pip install -e ".[test]"
 ```
 
-Requires Python 3.10+. The package has no runtime dependencies.
+Requires Python 3.10+. The package has no runtime dependencies. If `pip install context-curator-lite` reports that no distribution was found, that is the current registry state rather than a local environment problem.
+
+## Quickstart
+
+```bash
+mkdir -p notes artifacts
+printf "%s\n" "Plan: verify install docs. TODO: cite source refs." > notes/plan.md
+context-curator-lite --root notes --out-dir artifacts --telos-envelope
+```
+
+A successful run writes a dated Markdown summary, a dated JSONL bundle, `curated-session-context-manifest.json`, and, with `--telos-envelope`, `project-telos-context-envelope.json`.
 
 ## CLI
 

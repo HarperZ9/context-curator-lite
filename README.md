@@ -63,9 +63,15 @@ absolute local paths.
 
 ## Install
 
+`context-curator-lite` is not published on PyPI. The current source tree is version 0.2.0; install it from a checkout:
+
 ```bash
+git clone https://github.com/HarperZ9/context-curator-lite.git
+cd context-curator-lite
 python -m pip install -e ".[test]"
 ```
+
+The GitHub v0.1.0 release assets exist for the older CLI, but they do not include the 0.2.0 Project Telos envelope work documented here.
 
 ## Usage
 

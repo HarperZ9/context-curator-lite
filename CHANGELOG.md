@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+No changes yet.
+
+## 0.2.0 - Pending release
+
 - Refreshes public/developer delivery with repo-local agent instructions,
   current GitHub Actions majors, and ASCII-safe public documentation.
 - Adds optional Project Telos context-envelope export with source refs,

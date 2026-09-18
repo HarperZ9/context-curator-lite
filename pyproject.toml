@@ -22,7 +22,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest>=8"]
+test = ["pytest>=8", "build>=1.2", "hatchling>=1.25"]
 
 [project.scripts]
 context-curator-lite = "context_curator_lite.cli:main"
@@ -36,3 +36,22 @@ Issues = "https://github.com/HarperZ9/context-curator-lite/issues"
 addopts = "-q"
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+  ".github",
+  ".gitignore",
+  "AGENTS.md",
+  "AUTHORS.md",
+  "CHANGELOG.md",
+  "CONTRIBUTING.md",
+  "LICENSE",
+  "README.md",
+  "RELEASE.md",
+  "USAGE.md",
+  "docs",
+  "examples",
+  "pyproject.toml",
+  "src",
+  "tests",
+]

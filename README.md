@@ -20,16 +20,22 @@ content hashes, and expansion commands instead of only compressed prose.
 ## Try it
 
 ```bash
-curl -L -o context_curator_lite-0.2.0-py3-none-any.whl \
-  https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
-python - <<'PY'
+(
+  set -eu
+  wheel="context_curator_lite-0.2.0-py3-none-any.whl"
+  curl -fL -o "$wheel" \
+    https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
+  python - "$wheel" <<'PY'
 from pathlib import Path
 import hashlib
+import sys
 expected = "e0323946afe9a075c4916759c70280987e57813d5fc6126cfdcbbfdeb6cf1556"
-actual = hashlib.sha256(Path("context_curator_lite-0.2.0-py3-none-any.whl").read_bytes()).hexdigest()
-raise SystemExit(0 if actual == expected else f"wheel sha256 mismatch: {actual}")
+actual = hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest()
+if actual != expected:
+    raise SystemExit(f"wheel sha256 mismatch: {actual}")
 PY
-python -m pip install ./context_curator_lite-0.2.0-py3-none-any.whl
+  python -m pip install "./$wheel"
+)
 context-curator-lite --root . --out-dir ./artifacts --telos-envelope
 ```
 
@@ -74,16 +80,22 @@ absolute local paths.
 `context-curator-lite` is not published on PyPI. Install the published v0.2.0 wheel from GitHub Releases after checking the asset hash:
 
 ```bash
-curl -L -o context_curator_lite-0.2.0-py3-none-any.whl \
-  https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
-python - <<'PY'
+(
+  set -eu
+  wheel="context_curator_lite-0.2.0-py3-none-any.whl"
+  curl -fL -o "$wheel" \
+    https://github.com/HarperZ9/context-curator-lite/releases/download/v0.2.0/context_curator_lite-0.2.0-py3-none-any.whl
+  python - "$wheel" <<'PY'
 from pathlib import Path
 import hashlib
+import sys
 expected = "e0323946afe9a075c4916759c70280987e57813d5fc6126cfdcbbfdeb6cf1556"
-actual = hashlib.sha256(Path("context_curator_lite-0.2.0-py3-none-any.whl").read_bytes()).hexdigest()
-raise SystemExit(0 if actual == expected else f"wheel sha256 mismatch: {actual}")
+actual = hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest()
+if actual != expected:
+    raise SystemExit(f"wheel sha256 mismatch: {actual}")
 PY
-python -m pip install ./context_curator_lite-0.2.0-py3-none-any.whl
+  python -m pip install "./$wheel"
+)
 ```
 
 Release asset checks for v0.2.0:

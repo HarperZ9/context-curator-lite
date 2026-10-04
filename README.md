@@ -1,10 +1,20 @@
-<p align="center"><img src=".github/assets/banner.png" alt="context-curator-lite" width="100%"></p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/HarperZ9/context-curator-lite/main/docs/art/hero-dark.svg">
+  <img src="https://raw.githubusercontent.com/HarperZ9/context-curator-lite/main/docs/art/hero-light.svg" alt="context-curator-lite: Builds token-efficient context bundles with redaction and source refs. Bundles of fine lines carry the work through 4 stations, extract, redact, bundle and hash, along a sweeping path into a bright core." width="100%">
+</picture>
 
-# Context Curator Lite
+# context-curator-lite
 
-![Context Curator Lite hero](docs/brand/context-curator-lite-hero.png)
+Builds token-efficient context bundles with redaction and source refs.
 
-> Build token-efficient context bundles with redaction, source refs, hashes, and Telos envelopes.
+```
+context-curator-lite --root . --out-dir ./artifacts --telos-envelope
+```
+
+[![version: 0.2.0](https://img.shields.io/badge/version-0.2.0-e6e1d6?style=flat-square&labelColor=1a1712)](https://github.com/HarperZ9/context-curator-lite/releases/latest)
+[![CI](https://github.com/HarperZ9/context-curator-lite/actions/workflows/ci.yml/badge.svg)](https://github.com/HarperZ9/context-curator-lite/actions/workflows/ci.yml)
+[![license](https://img.shields.io/badge/license-MIT-e6e1d6?style=flat-square&labelColor=1a1712)](https://github.com/HarperZ9/context-curator-lite/blob/main/LICENSE)
+![python 3.10+](https://img.shields.io/badge/python-3.10%2B-e6e1d6?style=flat-square&labelColor=1a1712)
 
 Context Curator Lite extracts planning fragments from local text files, applies
 heuristic redaction, and emits compact context bundles for agent session

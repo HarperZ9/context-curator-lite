@@ -21,6 +21,12 @@ heuristic redaction, and emits compact context bundles for agent session
 continuity. It can also emit Project Telos context envelopes for receipt-chained
 large-workspace handoffs.
 
+## See it work, step by step
+
+The [animated explainer](https://harperz9.github.io/repo-explainers/context-curator-lite.html)
+walks through two sample files from a working session: keyword classification, scrubbing, the four-file bundle with its manifest checks, and the Telos envelope whose source refs point back to the originals. Every value on it is output from this repository. Its
+source is [docs/explainer/index.html](docs/explainer/index.html).
+
 ## Why it matters
 
 Large codebases cannot be pushed into a model as raw text forever. This tool

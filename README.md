@@ -27,6 +27,42 @@ The [animated explainer](https://harperz9.github.io/repo-explainers/context-cura
 walks through two sample files from a working session: keyword classification, scrubbing, the four-file bundle with its manifest checks, and the Telos envelope whose source refs point back to the originals. Every value on it is output from this repository. Its
 source is [docs/explainer/index.html](docs/explainer/index.html).
 
+## Watch
+
+No concept film fits this tool closely yet. The walkthrough below covers it in text, with real commands and output.
+
+Video walkthrough: coming with the next release.
+
+## Walkthrough
+
+Install it, run it once, then use the main feature. Each command below is real, and so is its output.
+
+1. **Install.** Install from a checkout. Python 3.10 or newer.
+
+   ```text
+   $ git clone https://github.com/HarperZ9/context-curator-lite.git && cd context-curator-lite
+   $ python -m pip install -e ".[test]"
+   ```
+
+2. **Scrub before it is stored.** Personal data and secrets are removed from text before curation.
+
+   ```text
+   >>> scrub("reach me at jane@example.com token=ghp_AAAA...A")
+   reach me at <email> <redacted-secret>
+   ```
+
+3. **Curate a project.** Curate a project's notes and sessions into a bundle with a Telos envelope.
+
+   ```text
+   $ context-curator-lite --root ./proj --out-dir ./artifacts --telos-envelope
+   "source_files_scanned": 2
+   "raw_keyword_matches": 5
+   "curated_records": 4
+   "counts": {"next-action": 2, "blocker": 1, "idea": 1}
+   "absolute_paths_included": false
+   "raw_transcripts_copied": false
+   ```
+
 ## Why it matters
 
 Large codebases cannot be pushed into a model as raw text forever. This tool

@@ -174,9 +174,9 @@ ol.walkthrough p{margin:0 0 .3rem;max-width:44rem}
     <p>A model cannot read a large workspace every session. Context Curator Lite scans your local notes and session logs for the lines that matter, such as next actions, blockers and ideas, scrubs emails and secret-shaped values, and writes a compact bundle. Each item keeps a reference to its source file, and an optional envelope adds content hashes and a command to expand it, so the next agent can go back to the original and check it.</p>
   </div>
   <ul class="uses">
-    <li><b>Only the lines that matter</b>Keyword rules keep planning fragments and drop chatter.</li>
-    <li><b>Scrubbed before it is written</b>Emails and secret-shaped values are replaced, and raw transcripts are never copied.</li>
-    <li><b>Relative paths only</b>Bundles name sources by relative path and hash the roots, with no absolute local paths.</li>
+    <li><b>The lines that matter</b>Keyword rules keep next actions, blockers and ideas, and drop chatter.</li>
+    <li><b>Scrubbed before it is written</b>Emails and secret-shaped values become placeholders, and the bundle holds curated lines in place of raw transcripts.</li>
+    <li><b>Relative paths</b>Bundles name each source by its path relative to the root, and hash the roots.</li>
     <li><b>Replayable by reference</b>The Telos envelope gives each source a content hash and an expansion command.</li>
   </ul>
   <p class="src">Source: <a href="https://github.com/HarperZ9/context-curator-lite/blob/1f8de376d3ff7d970d8d02f641c3d3306bedf570/README.md">README.md</a> at 1f8de37 (version 0.2.0)</p>
@@ -204,7 +204,7 @@ ol.walkthrough p{margin:0 0 .3rem;max-width:44rem}
     <ol class="steps">
       <li class="step" tabindex="-1" data-scene="k0" data-state="s"><div class="card">
         <span class="num">01</span><h3>Two files from a working session</h3>
-        <p>The notes file has a heading, a next action, a blocker, an architecture idea, a line with an email address and a token, and a line of chatter. The session log has a user turn asking to resume a handoff and an assistant turn with nothing in it.</p>
+        <p>The notes file has a heading, a next action, a blocker, an architecture idea, a line with an email address and a token, and a line of chatter. The session log has a user turn asking to resume a handoff and an empty assistant turn.</p>
         <p class="src">Source: <a href="https://github.com/HarperZ9/context-curator-lite/blob/1f8de376d3ff7d970d8d02f641c3d3306bedf570/examples/demo.py">examples/demo.py</a></p>
       </div></li>
       <li class="step" tabindex="-1" data-scene="k1" data-state="s"><div class="card">
@@ -215,18 +215,18 @@ ol.walkthrough p{margin:0 0 .3rem;max-width:44rem}
       </div></li>
       <li class="step" tabindex="-1" data-scene="k2" data-state="s"><div class="card">
         <span class="num">03</span><h3>Scrub what should not travel</h3>
-        <p><code>scrub</code> replaces email addresses and secret-shaped values. A line holding an email and a GitHub-shaped token comes back as placeholders. The line in the notes with an email and a token does not reach the bundle.</p>
+        <p><code>scrub</code> replaces email addresses and secret-shaped values. A line holding an email and a GitHub-shaped token comes back as placeholders. The bundle keeps four records, and the notes line with the email and token is left out of them.</p>
         <p class="src">Source: <a href="https://github.com/HarperZ9/context-curator-lite/blob/1f8de376d3ff7d970d8d02f641c3d3306bedf570/src/context_curator_lite/curator.py">src/context_curator_lite/curator.py</a>, <code>scrub</code></p>
       </div></li>
       <li class="step" tabindex="-1" data-scene="k3" data-state="s"><div class="card">
         <span class="num">04</span><h3>A small bundle, with its own checks</h3>
-        <p>The run writes four files: a Markdown summary, a JSONL bundle, a manifest and the envelope. The manifest states that no absolute paths were included and no raw transcripts were copied, and gives the counts by kind.</p>
+        <p>The run writes four files: a Markdown summary, a JSONL bundle, a manifest and the envelope. The manifest records <code>absolute_paths_included: false</code> and <code>raw_transcripts_copied: false</code>, and gives the counts by kind.</p>
         <p class="src">Source: <a href="https://github.com/HarperZ9/context-curator-lite/blob/1f8de376d3ff7d970d8d02f641c3d3306bedf570/src/context_curator_lite/curator.py">src/context_curator_lite/curator.py</a>, <code>main</code></p>
       </div></li>
       <li class="step" tabindex="-1" data-scene="k4" data-state="s"><div class="card">
         <span class="num">05</span><h3>An envelope that points back to the source</h3>
         <p>The Telos envelope lists each source with its SHA-256 and an expansion command, and ties every claim to the source it came from. The next agent can re-read <code>notes.md</code> and check its hash; it does not have to trust the summary.</p>
-        <p>Its quality gates say what was checked: readability, freshness and privacy read MATCH, and test evidence reads UNVERIFIABLE, because nothing in the notes was a test result.</p>
+        <p>Its quality gates say what was checked: readability, freshness and privacy read MATCH, and test evidence reads UNVERIFIABLE, because the notes hold planning lines and the gate looks for test results.</p>
         <p class="src">Source: <a href="https://github.com/HarperZ9/context-curator-lite/blob/1f8de376d3ff7d970d8d02f641c3d3306bedf570/src/context_curator_lite/telos_envelope.py">src/context_curator_lite/telos_envelope.py</a></p>
       </div></li>
     </ol>
@@ -256,11 +256,10 @@ $ python -m pip install -e ".[test]"</code></pre></li>
 </section>
 
 <section class="block wrap" aria-labelledby="limits">
-  <h2 id="limits">What it does not do</h2>
+  <h2 id="limits">Limits</h2>
   <ul class="limits">
-    <li>Classification is by keyword. A line that matters but uses none of the keywords is dropped.</li>
-    <li>Redaction is heuristic. The bundle still needs a person to review it before it is shared.</li>
-    <li>It is not a security boundary. It helps prepare bounded context and replaces no review.</li>
+    <li>Classification is by keyword. An important line phrased with other words is dropped, so keep key notes in the keyword vocabulary.</li>
+    <li>Redaction is heuristic. Have a person review the bundle before it is shared.</li>
     <li>The short source hash in the bundle identifies the file by its relative path; the envelope carries the content hash.</li>
   </ul>
   <p class="src">Source: README.md at 1f8de37, "Current status" and "Existing technical notes"; src/context_curator_lite/curator.py</p>
@@ -269,9 +268,9 @@ $ python -m pip install -e ".[test]"</code></pre></li>
 <section class="block wrap recall" aria-labelledby="recall">
   <h2 id="recall">Check what stuck</h2>
   <p class="measure">Answer each one in your head before you open it.</p>
-  <details><summary>Why does the chatter line not reach the bundle?</summary><p>It contains no keyword, so classification drops it.</p></details>
+  <details><summary>What happens to the line of chatter, and why?</summary><p>Classification drops it. The rules look for words like next, blocked and idea, and chatter uses other words.</p></details>
   <details><summary>How does the next agent check that a claim came from notes.md?</summary><p>The envelope gives the file's SHA-256 and a command to re-read it, and each claim names its source ref.</p></details>
-  <details><summary>Why does test evidence read UNVERIFIABLE?</summary><p>Nothing in the curated sources was a test result, so it could not be checked.</p></details>
+  <details><summary>Why does test evidence read UNVERIFIABLE?</summary><p>The gate checks test results, and the curated sources held planning notes.</p></details>
 </section>
 </main>
 <footer class="foot wrap">
